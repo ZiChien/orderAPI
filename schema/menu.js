@@ -1,6 +1,5 @@
 import { gql } from "apollo-server";
 import pool from "../pool.js";
-import client from "../mongoClient.js";
 
 // The GraphQL schema
 const typeDefs = gql`
@@ -62,14 +61,6 @@ const resolvers = {
   Query: {
     getMenu: async (root, input) => {
       try {
-        // const merchantId = input.merchantId;
-
-        // const database = client.db("develop");
-        // const menu = database.collection("menu");
-        // const filter = { merchantId };
-        // const res = await menu.findOne(filter);
-        // console.log(res.menu[0].products[0].attributes);
-
         const query = `
               SELECT 
                 menu.menuId, menu.menuName, menu.menuDescription,
@@ -104,7 +95,6 @@ const resolvers = {
           `;
 
         const [rows] = await pool.execute(query, [1])
-        console.log(rows);
         // 整理數據
         const menuMap = new Map();
 
@@ -153,7 +143,7 @@ const resolvers = {
             };
             category.products.push(product);
           }
-          if(!attributeId) return;
+          if (!attributeId) return;
           let attribute = product.attributes.find(a => a.attributeId === attributeId);
           if (!attribute) {
             attribute = {
@@ -180,36 +170,6 @@ const resolvers = {
         });
 
         const formattedMenus = Array.from(menuMap.values());
-        console.log(JSON.stringify(formattedMenus, null, 1));
-
-        // //取得這個餐廳的所有menu
-        // const [menu_rows] = await pool.execute(
-        //     `
-        //         SELECT * FROM merchant_menu
-        //         JOIN menu ON merchant_menu.menuId = menu.menuId
-        //         WHERE merchantId = 1
-        //     `
-        // )
-
-        // // 取得每個menu中的所有category
-        // for (const menu_row of menu_rows) {
-        //     const [category_rows] = await pool.execute(
-        //         `
-        //             SELECT * FROM menu_category
-        //             JOIN category ON menu_category.categoryId = category.categoryId
-        //             WHERE menu_category.menuId = ?
-        //         `,
-        //         [menu_row.menuId]
-        //     )
-        //     menu_row.category = category_rows[0]
-        //     // 取得每個category中的所有product
-        //     for (const category_row of category_rows) {
-        //         // console.log(category_row);
-
-        //     }
-
-        // }
-
         // return menu_rows
         return formattedMenus
       } catch (err) {

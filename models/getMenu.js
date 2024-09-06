@@ -36,8 +36,6 @@ export default async function getMenu() {
 `;
 
         const [rows] = await pool.execute(query, [1])
-        console.log(rows);
-        // 整理數據
         const menuMap = new Map();
 
         rows.forEach(row => {
@@ -112,35 +110,6 @@ export default async function getMenu() {
         });
 
         const formattedMenus = Array.from(menuMap.values());
-        console.log(JSON.stringify(formattedMenus, null, 1));
-
-        // //取得這個餐廳的所有menu
-        // const [menu_rows] = await pool.execute(
-        //     `
-        //         SELECT * FROM merchant_menu
-        //         JOIN menu ON merchant_menu.menuId = menu.menuId
-        //         WHERE merchantId = 1
-        //     `
-        // )
-
-        // // 取得每個menu中的所有category
-        // for (const menu_row of menu_rows) {
-        //     const [category_rows] = await pool.execute(
-        //         `
-        //             SELECT * FROM menu_category
-        //             JOIN category ON menu_category.categoryId = category.categoryId
-        //             WHERE menu_category.menuId = ?
-        //         `,
-        //         [menu_row.menuId]
-        //     )
-        //     menu_row.category = category_rows[0]
-        //     // 取得每個category中的所有product
-        //     for (const category_row of category_rows) {
-        //         // console.log(category_row);
-
-        //     }
-
-        // }
 
         // return menu_rows
         return formattedMenus
@@ -149,9 +118,3 @@ export default async function getMenu() {
     }
     pool.end()
 }
-// console.log(await getMenu());
-
-
-// SELECT * FROM merchant_menu //merchant_menu中記錄餐廳的menuId
-// JOIN menu ON merchant_menu.menuId = menu.menuId //去menu表中找到所有 在merchant_menu與menu有著相同menuId的資料 並將其結合
-// WHERE merchantId = 1 最後選擇merchantId = 1的資料

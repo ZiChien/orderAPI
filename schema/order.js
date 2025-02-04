@@ -81,6 +81,7 @@ const typeDefs = gql`
   input GetOrderInput {
     merchantId: ID!
     status: [Status]
+    orderID: ID
   }
 
   type Order {
@@ -154,7 +155,7 @@ const resolvers = {
   Query: {
     getOrder: async (root, { input }) => {
       try {
-        const { merchantId, status } = input;
+        const { merchantId, status, orderID } = input;
         const defaultStatus = ["PENDING", "CONFIRMED", "READY", "COMPLETED"];
 
         if (!merchantId) throw new Error("merchantId is required");
@@ -163,6 +164,7 @@ const resolvers = {
         const query = {
           merchantId: merchantId,
           status: { $in: status ? status : defaultStatus },
+          orderID: orderID ? orderID : { $exists: true },
         };
         const options = {
           sort: { pickUpDateTime: 1 },

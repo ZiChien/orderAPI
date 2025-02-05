@@ -35,6 +35,7 @@ app.get("/sss", (req, res) => {
 });
 
 // Modified server startup
-await new Promise((resolve) => httpServer.listen({ port: 4000 }, resolve));
+const port = parseInt(process.env.PORT) || 4000;
+await new Promise((resolve) => httpServer.listen({ port}, resolve));
 
 console.log(`🚀 Server ready at http://localhost:4000/`);

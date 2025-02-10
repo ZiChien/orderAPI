@@ -5,7 +5,8 @@ import { GraphQLError } from "graphql";
 import dayjs from "dayjs";
 // import { PubSub } from "@google-cloud/pubsub";
 import { notifyMerchant } from "../handlers/newOrder.js";
-
+import { sendLineMessageOnOrderCreate } from "../handlers/lineMessage.js";
+import { customAlphabet } from "nanoid";
 
 const client = createClient();
 
@@ -98,6 +99,7 @@ const typeDefs = gql`
     pickUpDateTime: String!
     status: Status!
     createTime: String!
+    number: String
   }
   enum Status {
     PENDING
@@ -187,10 +189,12 @@ const resolvers = {
       try {
         const db = client.db("develop");
         const orders = db.collection("orders");
+        const nanoid = customAlphabet('1234567890abcdefg', 4)
         const order = {
           ...input,
           status: "PENDING",
           createTime: dayjs().format(),
+          number: nanoid()
         };
         await orders.insertOne(order);
         // async function publishNewOrder(order) {
@@ -202,6 +206,8 @@ const resolvers = {
         // }
         // await publishNewOrder(order);
         notifyMerchant(order);
+        await sendLineMessageOnOrderCreate(order);
+
         return "Order created successfully";
       } catch (err) {
         switch (err.code) {
@@ -237,6 +243,9 @@ const resolvers = {
           upsert: false,
         };
         const result = await orders.updateOne(filter, updateDoc, options);
+        const updatedOrder = await orders.findOne(filter);
+        console.log(updatedOrder);
+        sendLineMessageOnOrderCreate(updatedOrder);
         return "orderStatus has been updated";
       } catch (err) {
         console.log(err);

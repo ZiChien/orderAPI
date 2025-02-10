@@ -14,7 +14,8 @@ const statusMap = new Map([
 const altText = statusMap.get(order.status).altText;
 const statusText = statusMap.get(order.status).text;
 const pickUpTime = dayjs(order.pickUpDateTime).format("YYYY/MM/DD (ddd) HH:mm");
-const orderNumber = "B2F23";
+const number = order.number;
+const total = order.total;
 const confirmUrl = `${process.env.ZCORDER_CUS_BASE_URL}/ThompsonDessert/confirm/${order.orderID}`;
 
 
@@ -71,7 +72,7 @@ const confirmUrl = `${process.env.ZCORDER_CUS_BASE_URL}/ThompsonDessert/confirm/
                 },
                 {
                   type: "text",
-                  text: `取餐號碼: ${orderNumber}`,
+                  text: `取餐號碼: ${number}`,
                   size: "xs",
                   color: "#666666",
                   wrap: true,
@@ -79,7 +80,7 @@ const confirmUrl = `${process.env.ZCORDER_CUS_BASE_URL}/ThompsonDessert/confirm/
                 },
                 {
                   type: "text",
-                  text: "訂單金額: $420",
+                  text: `訂單金額: ${total}`,
                   size: "xs",
                   color: "#666666",
                   wrap: true,

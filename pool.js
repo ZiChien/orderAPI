@@ -6,6 +6,7 @@ import 'dotenv/config'
 // Create the connection pool. The pool-specific settings are the defaults
 const pool = mysql.createPool({
     host: process.env.MYSQL_HOST_DEV,
+    socketPath: process.env.NODE_ENV==='production' ? process.env.INSTANCE_UNIX_SOCKET : undefined,
     user: process.env.MYSQL_USER_DEV,
     password: process.env.MYSQL_PASSWORD_DEV,
     database: process.env.MYSQL_DATABASE_DEV,

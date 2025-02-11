@@ -15,7 +15,7 @@ const altText = statusMap.get(order.status).altText;
 const statusText = statusMap.get(order.status).text;
 const pickUpTime = dayjs(order.pickUpDateTime).format("YYYY/MM/DD (ddd) HH:mm");
 const number = order.number;
-const total = order.total;
+const totalPrice = order.totalPrice;
 const confirmUrl = `${process.env.ZCORDER_CUS_BASE_URL}/ThompsonDessert/confirm/${order.orderID}`;
 
 
@@ -80,7 +80,7 @@ const confirmUrl = `${process.env.ZCORDER_CUS_BASE_URL}/ThompsonDessert/confirm/
                 },
                 {
                   type: "text",
-                  text: `訂單金額: ${total}`,
+                  text: `訂單金額: ${totalPrice}`,
                   size: "xs",
                   color: "#666666",
                   wrap: true,

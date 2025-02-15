@@ -7,6 +7,7 @@ import dayjs from "dayjs";
 import { notifyMerchant } from "../handlers/newOrder.js";
 import { sendLineMessageOnOrderCreate } from "../handlers/lineMessage.js";
 import { customAlphabet } from "nanoid";
+import { sendEmail } from "../handlers/email.js";
 
 const client = createClient();
 
@@ -207,6 +208,7 @@ const resolvers = {
         // await publishNewOrder(order);
         notifyMerchant(order);
         await sendLineMessageOnOrderCreate(order);
+        sendEmail(order);
 
         return "Order created successfully";
       } catch (err) {

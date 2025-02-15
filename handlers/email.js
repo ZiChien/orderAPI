@@ -2,6 +2,8 @@ import nodemailer from "nodemailer";
 import 'dotenv/config';
 import dayjs from "dayjs";
 
+
+
 function sendEmail(order) {
   const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -21,8 +23,8 @@ const mailOptions = {
         <p>訂單號碼: ${order.number}</p>
         <p>顧客姓名: ${order.customer.name}</p>
         <p>總價: ${order.totalPrice}</p>
-        <p>下單時間: ${dayjs(order.createTime).format('YYYY-MM-DD (ddd) HH:mm:ss')}</p>
-        <p>取餐時間: ${dayjs(order.pickUpDateTime).format('YYYY-MM-DD (ddd) HH:mm:ss')}</p>
+        <p>下單時間: ${dayjs(order.createTime).tz('Asia/Taipei').format('YYYY-MM-DD (ddd) HH:mm:ss')}</p>
+        <p>取餐時間: ${dayjs(order.pickUpDateTime).tz('Asia/Taipei').format('YYYY-MM-DD (ddd) HH:mm:ss')}</p>
         <h3>訂單內容:</h3>
         <ul>
             ${order.content.map(item => `

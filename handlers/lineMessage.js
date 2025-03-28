@@ -1,5 +1,11 @@
 import dayjs from "dayjs";
+import utc from 'dayjs/plugin/utc.js'
+import timezone from 'dayjs/plugin/timezone.js'
+import "dayjs/locale/zh-tw.js"
 import 'dotenv/config';
+dayjs.extend(utc)
+dayjs.extend(timezone)
+dayjs.locale('zh-tw')
 const sendLineMessageOnOrderCreate = async (order) => {
   const LINE_ACCESS_TOKEN =
     "iS7aH5uxMprnxzDgqWB/HIfLxTMv3pr07tXT3eZKvSIwLfyMQES3FWf/pgKCj1pYraO2BqK2vqIPVD6I4EoDjD4p6r0Z2gQXwSjRs6fW6gsrmwnjkiVcKlM61hqmJUnfcnhN3gq0YtJ/pw48kj6KpwdB04t89/1O/w1cDnyilFU=";
@@ -13,13 +19,15 @@ const statusMap = new Map([
 
 const altText = statusMap.get(order.status).altText;
 const statusText = statusMap.get(order.status).text;
-const pickUpTime = dayjs(order.pickUpDateTime).format("YYYY/MM/DD (ddd) HH:mm");
+
+const pickUpTime = dayjs.utc(order.pickUpDateTime).tz("Asia/Taipei").format("YYYY年M月D日(dd) HH:mm");
+
+
 const number = order.number;
 const totalPrice = order.totalPrice;
 const confirmUrl = `${process.env.ZCORDER_CUS_BASE_URL}/ThompsonDessert/confirm/${order.orderID}`;
 
 
-// const total = order.
   await fetch("https://api.line.me/v2/bot/message/push", {
     method: "POST",
     headers: {
